@@ -85,6 +85,32 @@ class _SalesPageState extends State<SalesPage> {
     });
   }
 
+  Future<void> _confirmClearCart() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Vaciar venta'),
+        content: const Text(
+          'Se quitarán todos los productos del detalle de venta.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text('Vaciar'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    setState(() => _cart.clear());
+  }
+
   void _showPendingSyncMessage() {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -192,10 +218,26 @@ class _SalesPageState extends State<SalesPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Detalle de venta',
-              style: Theme.of(context).textTheme.titleLarge
-                  ?.copyWith(fontWeight: FontWeight.bold),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Detalle de venta',
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.titleLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                TextButton.icon(
+                  onPressed: _cart.isEmpty ? null : _confirmClearCart,
+                  icon: const Icon(Icons.delete_sweep_outlined, size: 18),
+                  label: const Text('Vaciar'),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 16),
             Expanded(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'features/sales/presentation/sales_page.dart';
+import 'core/routing/enrutador.dart';
 
 void main() {
   runApp(const FacturacionApp());
@@ -16,9 +16,10 @@ class FacturacionApp extends StatelessWidget {
       brightness: Brightness.light,
     );
 
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Facturación',
       debugShowCheckedModeBanner: false,
+      routerConfig: Enrutador.instancia.router,
       theme: ThemeData(
         colorScheme: colorScheme,
         useMaterial3: true,
@@ -28,8 +29,10 @@ class FacturacionApp extends StatelessWidget {
           filled: true,
           fillColor: Colors.white,
         ),
+        navigationBarTheme: NavigationBarThemeData(
+          indicatorColor: colorScheme.primaryContainer,
+        ),
       ),
-      home: const SalesPage(),
     );
   }
 }
